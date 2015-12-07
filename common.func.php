@@ -780,7 +780,7 @@ function is_email($email)
 	}
 }
 
-/**
+/*
 id,article_id,position,title,url,cover,desc
 				(空行，不参与解析)
 # 热门推荐		(#开头为注释，不解析)
@@ -791,7 +791,7 @@ id,article_id,position,title,url,cover,desc
 1005,null,hot,hot_5,http://www.wanmei.com,null,null
 1006,null,hot,hot_6,http://www.wanmei.com,/uploads/1510/26/4009-15102611560b34.jpg,'摘要'
 */
-function liststr2array($str)
+function textlist2array($str)
 {
 	$array = $headers = array();
 	$rows = explode("\n", str_replace("\r" , "", $str));
