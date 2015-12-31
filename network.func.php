@@ -1,5 +1,4 @@
 <?php
-
 function curl($url, $options=array())
 {
 	$result = array();
