@@ -352,3 +352,59 @@ function short_encode2($in)
     }
     return $out;
 }
+
+/** 
+ * 由于php的json扩展自带的函数json_encode会将汉字转换成unicode码 
+ * 所以我们在这里用自定义的json_encode，这个函数不会将汉字转换为unicode码 
+ */
+function json_encode_ex($a=false) 
+{
+	if (is_null($a))
+		return 'null';
+	if ($a === false)
+		return 'false';
+	if ($a === true)
+		return 'true';
+	if (is_scalar($a)) 
+	{ //判断是否为一个标量
+		if (is_float($a)) 
+			return floatval(str_replace(",",".",strval($a)));//将变量转换为字段串类型
+
+		if (is_string($a)) 
+		{
+			static $jsonReplaces =array(array("\\","/","\n","\t","\r","\b","\f",'"'),array('\\\\','\\/','\\n','\\t','\\r','\\b','\\f','\"'));
+			return '"' .str_replace($jsonReplaces[0],$jsonReplaces[1],$a) . '"';
+		}
+		else 
+		{
+			return $a;
+		}
+	}
+
+	$isList = true; //判断键值是否为自增长，也就是键值是从0开始自动添加的，不是自定义的
+	for ($i = 0, reset($a);$i <count($a);$i++, next($a)) 
+	{
+		if (key($a) !== $i) 
+		{
+			$isList = false;
+			break;
+		}
+	}
+	$result =array();
+	if ($isList) 
+	{
+		foreach ($a as $v)
+		{
+			$result[] = json_encode_ex($v);
+		}
+		return '[' . join(',',$result) . ']';
+	}
+	else 
+	{
+		foreach ($a as $k =>$v)
+		{
+			$result[] = json_encode_ex($k) . ':' .json_encode_ex($v);
+		}
+		return '{' . join(',',$result) . '}'; 
+	}
+}

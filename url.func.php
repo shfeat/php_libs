@@ -65,7 +65,16 @@ function add_url_params($params, $url='')
 		}
 	}
 	$params = array_merge($params_old, $params);
-	return $info['scheme'].'://'.$info['host'].$info['path'].'?'.http_build_query($params);
+	$url = '';
+	if(isset($info['scheme']))
+	{
+		$url .= $info['scheme'].'://';
+	}
+	if(isset($info['host']))
+	{
+		$url .= $info['host'];
+	}
+	return $url.$info['path'].'?'.http_build_query($params);
 }
 
 //获得 url 参数，可用于web服务器重写
